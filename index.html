@@ -459,6 +459,14 @@
     .portrait{ width:160px; height:160px; left:0; }
     .bubble{ width:118px; font-size:12.2px; }
   }
+ /* 도서 소개: 남색 배경 + 버튼을 상자 안으로 */
+  .bookteaser{ background-color:#173549; background-image:repeating-conic-gradient(from 0deg at 50% 46%, rgba(255,255,255,.06) 0deg 5deg, rgba(255,255,255,0) 5deg 15deg); }
+  .bookteaser .kick{ color:#A8DDF5; }
+  .bookteaser .head{ color:#FFE600; }
+  .bookteaser .head em{ color:#FFFFFF; -webkit-text-stroke:0; }
+  .bookteaser .book3d{ filter:drop-shadow(7px 9px 0 rgba(0,0,0,.35)); }
+  .bookteaser .cta{ background:#FFE600; color:#173549; margin:14px 0 0; }
+  .bookteaser .cta .l2{ color:#173549; }
 </style>
 </head>
 <body class="sun">
@@ -585,20 +593,17 @@
 
         <div class="bookteaser">
           <p class="kick">요즘 초등학생을 위한 고전 문학 30선</p>
-          <p class="head">이 영웅의 <em>진짜 이야기</em>는<br/>책에서 만나요!</p>
+          <p class="head">이 인물의 <em>진짜 이야기</em>는<br/>책에서 만나요!</p>
           <div class="bookwrap">
             <div class="hex l"><span><i>15만 학부모가</i><i>선택한</i><b>이은경 선생님</b><b>강력 추천</b></span></div>
             <div class="hex r"><span><i>전국교사작가협회</i><b>현직 교사</b><b>184명 추천</b></span></div>
             <img class="book3d" id="book3d" alt="바로 보고 바로 쓰는 고전 문학 입체 표지" />
           </div>
-         
-        </div>
-
-        <a class="cta" id="r-cta" href="#" target="_blank" rel="noopener">
+         <a class="cta" id="r-cta" href="#" target="_blank" rel="noopener">
           <span class="l1">📚 도서 만나러 가기</span>
           <span class="l2" id="r-book"></span>
         </a>
-
+        </div>
         <div class="btnrow" style="margin-bottom:9px;">
           <button class="btn ghost" id="savebtn" onclick="saveCard()">결과 이미지 저장</button>
           <button class="btn ghost" id="sharebtn" onclick="shareResult()">공유하기</button>
