@@ -824,7 +824,7 @@ function safeReplace(url){
 function init(){
   $('coversticker').src = COVER;
   $('book3d').src = BOOK3D;
-  $('r-book').textContent = "《" + CONFIG.BOOK_TITLE + "》 " + CONFIG.BOOK_SUB;
+  $('r-book').innerHTML = '<span style="font-size:9.5px">' + CONFIG.BOOK_SUB + '</span><br/>《' + CONFIG.BOOK_TITLE + '》';
   $('r-cta').href = CONFIG.BOOK_URL;
   $('r-note').textContent = CONFIG.EVENT_LINE || "";
   $('cast').innerHTML = ORDER.map(k =>
