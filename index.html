@@ -467,6 +467,17 @@
   .bookteaser .book3d{ filter:drop-shadow(7px 9px 0 rgba(0,0,0,.35)); }
   .bookteaser .cta{ background:#FFE600; color:#173549; margin:14px 0 0; }
   .bookteaser .cta .l2{ color:#173549; }
+  /* 도서 소개: 서점 버튼 3개 */
+  .buybox{ margin:16px 0 0; }
+  .buybox .bl{ font-family:var(--heavy); font-size:19px; color:#FFE600; letter-spacing:.02em; margin:0 0 10px; }
+  .buyrow{ display:flex; gap:8px; }
+  .buy{ flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none;
+    background:#FFE600; color:#173549; border:3px solid #171310; border-radius:13px; padding:10px 2px 9px;
+    box-shadow:4px 4px 0 rgba(0,0,0,.55); transition:transform .08s ease, box-shadow .08s ease; }
+  .buy:active{ transform:translate(3px,3px); box-shadow:1px 1px 0 rgba(0,0,0,.55); }
+  .buy b{ font-family:var(--heavy); font-weight:400; font-size:17px; line-height:1.1; white-space:nowrap; }
+  .buy span{ font-size:10.5px; font-weight:700; margin-top:3px; white-space:nowrap; }
+  @media (max-width:360px){ .buy b{ font-size:15px; } .buyrow{ gap:6px; } }
 </style>
 </head>
 <body class="sun">
@@ -599,10 +610,10 @@
             <div class="hex r"><span><i>전국교사작가협회</i><b>현직 교사</b><b>184명 추천</b></span></div>
             <img class="book3d" id="book3d" alt="바로 보고 바로 쓰는 고전 문학 입체 표지" />
           </div>
-         <a class="cta" id="r-cta" href="#" target="_blank" rel="noopener">
-          <span class="l1">📚 도서 만나러 가기</span>
-          <span class="l2" id="r-book"></span>
-        </a>
+         <div class="buybox">
+          <p class="bl">📚 도서 만나러 가기</p>
+          <div class="buyrow" id="r-buy"></div>
+        </div>
         </div>
         <div class="btnrow" style="margin-bottom:9px;">
           <button class="btn ghost" id="savebtn" onclick="saveCard()">결과 이미지 저장</button>
@@ -627,7 +638,11 @@
 const CONFIG = {
   BOOK_TITLE : "바로 보고 바로 쓰는 고전 문학",
   BOOK_SUB   : "초등 필수 문해력 × 독서·논술 수업",
-  BOOK_URL   : "https://www.yes24.com/product/goods/196904634",   // 도서 구매 링크
+  STORES : [
+    { name:"YES24",  url:"https://www.yes24.com/product/goods/196904634" },
+    { name:"알라딘",  url:"https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=402880689" },
+    { name:"교보문고", url:"https://product.kyobobook.co.kr/detail/S000221441719" }
+  ],
  
   SHUFFLE_OPTIONS : true                  // false = 기획안 문서의 A~D 순서 그대로
 };
@@ -829,8 +844,7 @@ function safeReplace(url){
 function init(){
   $('coversticker').src = COVER;
   $('book3d').src = BOOK3D;
-  $('r-book').innerHTML = '<span style="font-size:9.5px">' + CONFIG.BOOK_SUB + '</span><br/>《' + CONFIG.BOOK_TITLE + '》';
-  $('r-cta').href = CONFIG.BOOK_URL;
+  $('r-buy').innerHTML = CONFIG.STORES.map(s =>`<a class="buy" href="${s.url}" target="_blank" rel="noopener"><b>${s.name}</b><span>바로가기 →</span></a>`).join('');
   $('r-note').textContent = CONFIG.EVENT_LINE || "";
   $('cast').innerHTML = ORDER.map(k =>
     `<figure><img src="${IMG[k]}" alt="${CHARACTERS[k].name}"/><figcaption>${CHARACTERS[k].name}<small>「${CHARACTERS[k].work}」</small></figcaption></figure>`
