@@ -1115,7 +1115,50 @@ async function saveCard(){
   }
 }
 
-init();
+/* ── 메타 픽셀: 방문·테스트 진행·서점 클릭 기록 ── */
+const META_PIXEL_ID = "";   // ← 따옴표 안에 메타 픽셀 ID(숫자)를 넣으세요. 비워 두면 추적하지 않아요
+(function(){
+  if (!META_PIXEL_ID) return;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', META_PIXEL_ID);
+  fbq('track', 'PageView');
+  const px = (type, name, params) => { try{ fbq(type, name, params || {}); }catch(e){} };
+  const who = () => (window.CURRENT_KEY && CHARACTERS[window.CURRENT_KEY]) ? CHARACTERS[window.CURRENT_KEY].name : '';
+  // 머문 시간: 30초·1분·2분을 넘기면 한 번씩 기록
+  [30, 60, 120].forEach(s => setTimeout(() => px('trackCustom', 'StaySeconds', { seconds: s }), s * 1000));
+  // 테스트 시작
+  const _start = startQuiz;
+  startQuiz = function(){ px('trackCustom', 'QuizStart'); return _start.apply(this, arguments); };
+  // 결과 보기 (끝까지 완료 / 친구가 공유한 결과로 들어옴)
+  const _show = showResult;
+  showResult = function(key, shared){
+    const nm = CHARACTERS[key] ? CHARACTERS[key].name : key;
+    if (shared) px('trackCustom', 'SharedResultView', { character: nm });
+    else { px('track', 'ViewContent', { content_name: nm + ' 유형', content_category: '테스트 결과' });
+           px('trackCustom', 'QuizComplete', { character: nm }); }
+    return _show.apply(this, arguments);
+  };
+  // 공유하기 · 결과 이미지 저장
+  const _share = shareResult;
+  shareResult = function(){ px('trackCustom', 'ShareClick', { character: who() }); return _share.apply(this, arguments); };
+  const _save = saveCard;
+  saveCard = function(){ px('trackCustom', 'SaveCard', { character: who() }); return _save.apply(this, arguments); };
+  // 서점 버튼 클릭
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('.buy'); if (!a) return;
+    const store = a.querySelector('b') ? a.querySelector('b').textContent : a.textContent;
+    px('track', 'InitiateCheckout', { content_name: store, content_category: '도서 구매' });
+    px('trackCustom', 'StoreClick', { store: store, character: who() });
+    // 서점별로 따로 세기: 이벤트 관리자에 Click_Aladin / Click_YES24 / Click_Kyobo 로 각각 나와요
+    const code = { '알라딘':'Click_Aladin', 'YES24':'Click_YES24', '교보문고':'Click_Kyobo' }[store];
+    if (code) px('trackCustom', code, { character: who() });
+  });
+})();
+  init();
 </script>
 </body>
 </html>
