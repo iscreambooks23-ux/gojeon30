@@ -1157,6 +1157,11 @@ const META_PIXEL_ID = "1640875337383791";   // ← 따옴표 안에 메타 픽�
     // 서점별로 따로 세기: 이벤트 관리자에 Click_Aladin / Click_YES24 / Click_Kyobo 로 각각 나와요
     const code = { '알라딘':'Click_Aladin', 'YES24':'Click_YES24', '교보문고':'Click_Kyobo' }[store];
     if (code) px('trackCustom', code, { character: who() });
+        // 인스타·페북·카톡 앱 안 브라우저: 기록이 전송될 시간을 0.4초 준 뒤 서점으로 이동
+    if (/Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER|Line\//i.test(navigator.userAgent)) {
+      e.preventDefault();
+      setTimeout(() => { location.href = a.href; }, 400);
+    }
   });
 })();
   init();
